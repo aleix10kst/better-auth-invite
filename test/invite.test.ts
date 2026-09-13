@@ -489,6 +489,18 @@ describe("invite plugin", () => {
 			expect(inviteRow.status).toBe("accepted");
 			expect(inviteRow.acceptedUserId).toBe(response.user.id);
 
+			// credential account written with better-auth >=1.7.3's
+			// `(providerId, accountId)` identity, not the short-lived 1.7
+			// issuer schema
+			const accountRow = db["account"]!.find(
+				(a: any) => a.userId === response.user.id,
+			);
+			expect(accountRow).toBeTruthy();
+			expect(accountRow.providerId).toBe("credential");
+			expect(accountRow.accountId).toBe(response.user.id);
+			expect(accountRow.password).toBeTruthy();
+			expect(accountRow.issuer).toBeUndefined();
+
 			// credential account works: sign in with the chosen password
 			const signIn = await auth.api.signInEmail({
 				body: {
