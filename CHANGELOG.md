@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Fixed
+
+- Accepting an invitation with a password no longer fails at ESM link time on
+  better-auth >=1.7.3 (current latest: 1.7.4). The published 0.2.0 statically
+  imports `createLocalAccountIssuer` from `@better-auth/core/db` and calls it
+  to link the credential account; that export existed only in
+  `@better-auth/core` 1.7.0–1.7.2, whose issuer-based account schema 1.7.3
+  reverted in favor of 1.6's `(providerId, accountId)` identity, removing the
+  helper entirely. The plugin now links the credential account the same way
+  core's own email sign-up route does — `{ userId, providerId: "credential",
+  accountId: userId, password }`, no issuer — which also means it no longer
+  needs the helper at all.
+
 ### Added
 
 - `requireInvite` now honours Better Auth's organization plugin: a pending
@@ -15,6 +28,17 @@
 - README: "Inviting to an organization" — choosing between an app and an
   organization invitation by whether the address is registered, and
   provisioning the membership from `onInvitationAccepted`.
+
+### Changed
+
+- **Requires better-auth 1.7.3+.** The peer range is now `>=1.7.3 <2.0.0`, up
+  from `>=1.7.0`. 1.7.0–1.7.2 are no longer supported: they used the
+  issuer-based account schema 1.7.3 reverted (see Fixed, above), so linking a
+  credential account with the `(providerId, accountId)` shape this plugin now
+  sends would fail against them. Verified against the installed 1.7.4 sources
+  that no other internal signature the plugin depends on — `createUser`'s
+  provisioning-source argument, `runWithTransaction`/`getCurrentAdapter`,
+  `incrementOne` — changed between 1.7.2 and 1.7.4.
 
 ## 0.2.0 - 2026-08-21
 
