@@ -18,9 +18,9 @@ npm install @aleix10kst/better-auth-invite
 bun add @aleix10kst/better-auth-invite
 ```
 
-**Requires better-auth 1.7.** `better-auth` (`>=1.7.0 <2.0.0`), `@better-auth/core` (same range) and `zod` are peer dependencies. `@better-auth/core` provides Better Auth's transaction primitive and account-issuer helper; it ships as a dependency of `better-auth` itself, so installing it explicitly only matters for strict package managers such as pnpm.
+**Requires better-auth 1.7.3+.** `better-auth` (`>=1.7.3 <2.0.0`), `@better-auth/core` (same range) and `zod` are peer dependencies. `@better-auth/core` provides Better Auth's transaction primitive (`runWithTransaction`/`getCurrentAdapter`); it ships as a dependency of `better-auth` itself, so installing it explicitly only matters for strict package managers such as pnpm.
 
-1.7 changed the internal `createUser`/`linkAccount` signatures this plugin builds on, and supporting 1.6 as well would mean casting around them. If you are still on better-auth 1.6, use `@aleix10kst/better-auth-invite@0.1.x`.
+1.7 changed the internal `createUser` signature this plugin builds on (a provisioning-source second argument), so supporting 1.6 as well would mean casting around it — if you are still on better-auth 1.6, use `@aleix10kst/better-auth-invite@0.1.x`. **1.7.0–1.7.2 are also unsupported**: those releases briefly required linking a credential account through an issuer, and this plugin accepted an invitation by issuing one with `createLocalAccountIssuer`. 1.7.3 reverted that: accounts are identified by `(providerId, accountId)` again, same as 1.6, and this plugin now links credential accounts exactly like core's own email sign-up route does. If you already upgraded to the issuer schema on 1.7.0–1.7.2, follow Better Auth's [1.7 upgrade guide](https://better-auth.com/docs/guides/1-7-upgrade-guide) before moving to 1.7.3+ — no backfill is needed here, since this plugin always wrote `providerId`/`accountId` alongside the issuer.
 
 **This package is ESM-only** — `import` it; `require()` will not resolve. (`better-auth` is ESM-only too.)
 
