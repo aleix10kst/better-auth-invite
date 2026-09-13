@@ -309,8 +309,16 @@ describe("invite plugin on a real SQLite database", () => {
 				accepted.user.id,
 			);
 			expect(accountRows).toHaveLength(1);
+			// better-auth >=1.7.3 identifies accounts by `(providerId,
+			// accountId)` again (the 1.6 shape, reverted from 1.7's
+			// short-lived issuer schema) — this is the regression guard for
+			// the credential account `linkAccount` writes on accept.
 			expect(accountRows[0].providerId).toBe("credential");
+			expect(accountRows[0].accountId).toBe(accepted.user.id);
 			expect(accountRows[0].password).toBeTruthy();
+			// no `issuer` column exists on the schema this version of
+			// better-auth generates
+			expect(accountRows[0]).not.toHaveProperty("issuer");
 
 			const [row] = query(
 				sqlite,
