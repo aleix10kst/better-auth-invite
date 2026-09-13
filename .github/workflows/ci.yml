@@ -16,16 +16,19 @@ jobs:
       matrix:
         # lockfile   - exactly what the committed bun.lock resolves to, which
         #              is what a contributor gets locally.
-        # 1.7.0      - the declared peer floor. 1.7 is where
-        #              `internalAdapter.createUser` took a provisioning source
-        #              and `linkAccount` began requiring an `issuer`; the
-        #              plugin is written against those signatures, so 1.6 does
-        #              not typecheck and silently fails to link the credential
-        #              account at runtime.
+        # 1.7.3      - the declared peer floor. `internalAdapter.createUser`
+        #              taking a provisioning source argument has held since
+        #              1.7.0, but 1.7.0-1.7.2 required linking accounts
+        #              through an `issuer` this plugin no longer sets: 1.7.3
+        #              reverted core's account identity to 1.6's
+        #              `(providerId, accountId)`, and this plugin follows
+        #              suit, so anything older than 1.7.3 fails to write the
+        #              credential account when an invitation with a password
+        #              is accepted.
         # peer-range - the newest release the peerDependencies range allows,
         #              resolved from package.json at run time so this leg
         #              cannot silently rot as new versions ship.
-        better-auth: [lockfile, "1.7.0", peer-range]
+        better-auth: [lockfile, "1.7.3", peer-range]
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
