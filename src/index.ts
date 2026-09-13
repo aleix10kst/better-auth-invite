@@ -9,7 +9,6 @@ import {
 	getCurrentAdapter,
 	runWithTransaction,
 } from "@better-auth/core/context";
-import { createLocalAccountIssuer } from "@better-auth/core/db";
 import { BetterAuthError } from "@better-auth/core/error";
 import { defineErrorCodes } from "@better-auth/core/utils/error-codes";
 import { APIError } from "better-auth";
@@ -1412,10 +1411,16 @@ export const invite = (options: InviteOptions) => {
 								);
 								if (password) {
 									const hash = await ctx.context.password.hash(password);
+									// Same shape as core's own email sign-up route
+									// (better-auth/api/routes/sign-up): a credential
+									// account is identified by `(providerId,
+									// accountId)`, not an issuer. 1.7.0-1.7.2 briefly
+									// required an `issuer` here; 1.7.3 reverted the
+									// account schema to 1.6's, and this plugin follows
+									// core's lead rather than guess at a replacement.
 									await ctx.context.internalAdapter.linkAccount({
 										userId: user.id,
 										providerId: "credential",
-										issuer: createLocalAccountIssuer("credential"),
 										accountId: user.id,
 										password: hash,
 									});
