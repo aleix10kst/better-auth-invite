@@ -6,11 +6,11 @@
 	"author": "Aleix Canet <acanet94@gmail.com>",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/aleix10kst/better-auth-invite-plugin.git"
+		"url": "git+https://github.com/aleix10kst/better-auth-invite.git"
 	},
-	"homepage": "https://github.com/aleix10kst/better-auth-invite-plugin#readme",
+	"homepage": "https://github.com/aleix10kst/better-auth-invite#readme",
 	"bugs": {
-		"url": "https://github.com/aleix10kst/better-auth-invite-plugin/issues"
+		"url": "https://github.com/aleix10kst/better-auth-invite/issues"
 	},
 	"publishConfig": {
 		"access": "public"
